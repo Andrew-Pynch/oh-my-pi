@@ -368,6 +368,8 @@ export interface ExecutorOptions {
 	persistArtifacts?: boolean;
 	artifactsDir?: string;
 	eventBus?: EventBus;
+	/** Baseline process environment inherited from the parent session. */
+	processEnv?: Readonly<Record<string, string>>;
 	contextFiles?: ContextFileEntry[];
 	skills?: Skill[];
 	promptTemplates?: PromptTemplate[];
@@ -2494,6 +2496,7 @@ export async function runSubprocess(options: ExecutorOptions): Promise<SingleRes
 			// artifacts dir) — only the SessionManager differs.
 			const buildSubagentSessionOptions = (sessionManagerForRun: SessionManager): CreateAgentSessionOptions => ({
 				cwd: worktree ?? cwd,
+				processEnv: options.processEnv,
 				authStorage,
 				modelRegistry,
 				settings: subagentSettings,

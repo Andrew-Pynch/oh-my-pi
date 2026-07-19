@@ -143,6 +143,8 @@ export interface DeferredDiagnosticsEntry {
 export interface ToolSession {
 	/** Current working directory */
 	cwd: string;
+	/** Baseline environment for process-spawning tools. Per-call values take precedence. */
+	processEnv?: Readonly<Record<string, string>>;
 	/** Whether UI is available */
 	hasUI: boolean;
 	/**

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added `processEnv` to the SDK session options so embedded hosts can provide per-session environment variables to process-spawning tools without mutating global process state.
+
 ## [17.0.5] - 2026-07-18
 
 ### Added

@@ -2,9 +2,10 @@ import { describe, expect, it } from "bun:test";
 import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
 import { BashTool } from "@oh-my-pi/pi-coding-agent/tools/bash";
 
-function makeSession(): ToolSession {
+function makeSession(processEnv?: Readonly<Record<string, string>>): ToolSession {
 	return {
 		cwd: "/tmp",
+		processEnv,
 		hasUI: false,
 		skills: [],
 		getSessionFile: () => null,
@@ -78,6 +79,22 @@ describe("BashTool execution results", () => {
 		const text = result.content.find(c => c.type === "text")?.text ?? "";
 		expect(text).toContain("hi");
 		expect(text).not.toContain("Command exited with code");
+	});
+
+	it("inherits session environment and lets per-call values override it", async () => {
+		const tool = new BashTool(
+			makeSession({
+				OMP_SESSION_ENV_BASELINE: "session",
+				OMP_SESSION_ENV_OVERRIDE: "session",
+			}),
+		);
+		const result = await tool.execute("call-env", {
+			command: 'printf "%s:%s" "$OMP_SESSION_ENV_BASELINE" "$OMP_SESSION_ENV_OVERRIDE"',
+			env: { OMP_SESSION_ENV_OVERRIDE: "call" },
+		});
+
+		const text = result.content.find(c => c.type === "text")?.text ?? "";
+		expect(text).toContain("session:call");
 	});
 
 	it("preserves final-stage output when a pipeline ends in head or tail", async () => {

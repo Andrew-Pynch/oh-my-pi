@@ -744,7 +744,9 @@ export class BashTool implements AgentTool<typeof bashSchemaBase | typeof bashSc
 		ctx?: AgentToolContext,
 	): Promise<AgentToolResult<BashToolDetails>> {
 		let command = rawCommand;
-		const env = normalizeBashEnv(rawEnv);
+		const env = normalizeBashEnv(
+			this.session.processEnv || rawEnv ? { ...this.session.processEnv, ...rawEnv } : undefined,
+		);
 
 		// Extract leading `cd <path> && ...` into cwd when the model ignores the cwd parameter.
 		// Constrained to a single line so a `&&` that sits on a later line of a multiline

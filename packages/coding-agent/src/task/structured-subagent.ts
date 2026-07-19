@@ -405,6 +405,7 @@ function buildExecutorOptions(
 		keepAlive: request.keepAlive,
 		signal: request.signal,
 		eventBus: session.eventBus,
+		processEnv: session.processEnv,
 		onProgress: request.onProgress,
 		authStorage: session.authStorage,
 		modelRegistry: session.modelRegistry,

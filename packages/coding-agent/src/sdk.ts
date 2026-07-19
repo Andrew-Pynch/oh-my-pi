@@ -375,6 +375,8 @@ export interface CreateAgentSessionOptions {
 	agentDir?: string;
 	/** Spawns to allow. Default: "*" */
 	spawns?: string;
+	/** Baseline environment inherited by this session's process-spawning tools. Per-call values take precedence. */
+	processEnv?: Readonly<Record<string, string>>;
 
 	/** Auth storage for credentials. Default: discoverAuthStorage(agentDir) */
 	authStorage?: AuthStorage;
@@ -1653,6 +1655,7 @@ export async function createAgentSession(options: CreateAgentSessionOptions = {}
 			get cwd() {
 				return sessionManager.getCwd();
 			},
+			processEnv: options.processEnv,
 			isToolActive: name => activeToolNames.has(name),
 			setActiveToolNames,
 			hasUI: options.hasUI ?? false,
